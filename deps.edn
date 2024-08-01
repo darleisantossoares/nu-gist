@@ -1,0 +1,10 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/core.async    {:mvn/version "1.5.648"}
+        io.github.nubank/morse {:git/tag "v2023.04.30.01" :git/sha "d99b09c"}
+        clj-http/clj-http {:mvn/version "3.12.3"}
+        com.datomic/peer          {:mvn/version "1.0.7075"
+                                   :exclusions [org.slf4j/slf4j-nop
+                                                org.slf4j/slf4j-log4j12]}}
+ :aliases {:run {:exec-fn datomic.load-generator/run}
+           :dev
+  {:extra-deps {io.github.nubank/morse {:git/tag "v2023.04.30.01" :git/sha "d99b09c"}}}}}
