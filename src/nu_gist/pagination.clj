@@ -27,8 +27,9 @@
              {:db/ident :contact/customer-id+contact-name+contact-id
               :db/cardinality :db.cardinality/one
               :db/valueType :db.type/tuple
-              :db/tupleAttrs [:contact/customer-id :contact/name :contact/id] ;contact/id will be used as a tie breaker
-              :db/index true}])
+              :db/tupleAttrs [:contact/customer-id :contact/name :contact/id]
+              :db/index true
+              :db/doc "Tuple created to maintain the desired order"}])
 
 
 @(d/transact conn schema)
@@ -43,7 +44,46 @@
             "Robson" "Keith" "David" "Justin" "Jeb"
             "Jaret" "Gabi" "Alex" "Michael"
             "Jarrod" "Joao" "Georgia" "Jennifer"
-            "Marcela" "Andre" "Christian" "Guilherme"])
+            "Marcela" "Andre" "Christian" "Guilherme"
+            "Lucas" "Bruna" "Rafael" "Pedro" "Mariana"
+            "Henrique" "Sofia" "Gabriel" "Beatriz"
+            "Nicolas" "Arthur" "Livia" "Thiago" "Lara"
+            "Camila" "Leonardo" "Vitor" "Miguel" "Julia"
+            "Alexandre" "Jean" "Luc" "Pierre" "Marie"
+            "Claire" "Sophie" "Julien" "Thomas" "Nathalie"
+            "Jacques" "Isabelle" "Chloe" "Maxime" "Elodie"
+            "Antoine" "Camille" "Damien" "Manon" "Florian"
+            "Hugo" "Emma" "Lucas" "Lea" "Louis" "Amandine"
+            "Noah" "Elise" "Dylan" "Juliette" "Charles"
+            "Alain" "Marc" "Brigitte" "Laurent" "Charlotte"
+            "Nicolas" "Celine" "Yves" "Sandrine" "Stephane"
+            "David" "Alice" "Valerie" "Pascal" "Francois"
+            "Catherine" "Paul" "Gabrielle" "Jean-Paul"
+            "Anna" "Mark" "James" "William" "John"
+            "Mary" "Patricia" "Jennifer" "Linda" "Elizabeth"
+            "Barbara" "Susan" "Jessica" "Sarah" "Karen"
+            "Nancy" "Lisa" "Betty" "Margaret" "Sandra"
+            "Ashley" "Kimberly" "Emily" "Donna" "Michelle"
+            "Carol" "Amanda" "Dorothy" "Melissa" "Deborah"
+            "Stephanie" "Rebecca" "Sharon" "Laura" "Cynthia"
+            "Kathleen" "Amy" "Shirley" "Angela" "Helen"
+            "Anna" "Brenda" "Pamela" "Nicole" "Samantha"
+            "Katherine" "Emma" "Ruth" "Christine" "Catherine"
+            "Debra" "Rachel" "Carolyn" "Janet" "Virginia"
+            "Maria" "Heather" "Diane" "Julie" "Joyce"
+            "Victoria" "Kelly" "Christina" "Joan" "Evelyn"
+            "Lauren" "Judith" "Olivia" "Frances" "Martha"
+            "Cheryl" "Megan" "Andrea" "Hannah" "Jacqueline"
+            "Ann" "Jean" "Alice" "Kathryn" "Gloria"
+            "Teresa" "Doris" "Sara" "Janice" "Julia"
+            "Marie" "Madison" "Grace" "Judy" "Theresa"
+            "Beverly" "Denise" "Marilyn" "Amber" "Danielle"
+            "Rose" "Brittany" "Diana" "Abigail" "Natalie"
+            "Jane" "Lori" "Tiffany" "Alexis" "Kayla"
+            "Haruto" "Yuto" "Sota" "Yuma" "Ren"
+            "Hina" "Aoi" "Yui" "Sakura" "Hana"
+            "Haruki" "Kaito" "Koki" "Hinata" "Asahi"
+            "Miyu" "Akari" "Rin" "Ayaka" "Sara"])
 
 
 (defn get-random-contact
@@ -84,14 +124,10 @@ random-customer-id
 ;1492 in my case
 
 
-
-
 (d/q '[:find (pull ?e [*])
        :in $ ?c-id
        :where [?e :contact/customer-id ?c-id]]
      (d/db conn) random-customer-id)
-
-(def db (d/db conn))
 
 (d/basis-t db) ; current t for our DB, we need to encrypt the t on the answer
 
@@ -117,21 +153,4 @@ random-customer-id
            :io-context :tips-and-tricks/pagination}))
 
 
-
-
-;;; get history of an entity
-(def story [:instrument/id #uuid "1A119507-3388-4401-890C-7C09B22DD507"])
-
-
-(->> (d/q '[:find ?aname ?v ?tx ?inst ?added
-            :in $ ?e
-            :where
-            [?e ?a ?v ?tx ?added]
-            [?a :db/ident ?aname]
-            [?tx :db/txInstant ?inst]]
-          (d/history (d/db conn))
-          story)
-     seq
-     (sort-by #(first % ))
-     println)
 
