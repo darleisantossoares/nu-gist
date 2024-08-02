@@ -98,10 +98,6 @@ random-customer-id
 
 (def db-t (d/as-of db (d/basis-t db)))
 
-(def as-of #inst "2024-08-01T19:40:00Z")
-
-
-
 (def first-page (take 100 (d/index-pull db-t {:index :avet
                                                       :selector '[:contact/customer-id+contact-name+contact-id :contact/name :contact/id :contact/customer-id]
                                                       :start [:contact/customer-id+contact-name+contact-id [random-customer-id]]})))
@@ -109,10 +105,19 @@ random-customer-id
 
 (:contact/customer-id+contact-name+contact-id (last first-page))
 
-
 (take 100 (d/index-pull db-t {:index :avet
-                            :selector '[:contact/name]
-                            :start [:contact/customer-id+contact-name+contact-id (:contact/customer-id+contact-name+contact-id (last first-page))]}))
+                              :selector '[:contact/name]
+                              :start [:contact/customer-id+contact-name+contact-id (:contact/customer-id+contact-name+contact-id (last first-page))]}))
+
+
+(:io-stats (d/query {:query '[:find ?e
+                    :in $ ?customer-id
+                    :where [?e :contact/customer-id ?customer-id]]
+           :args [db-t random-customer-id]
+           :io-context :tips-and-tricks/pagination}))
+
+
+
 
 ;;; get history of an entity
 (def story [:instrument/id #uuid "1A119507-3388-4401-890C-7C09B22DD507"])
