@@ -5,8 +5,6 @@
 
 (d/create-database uri)
 
-;(d/delete-database uri)
-
 (def conn (d/connect uri))
 
 
@@ -86,6 +84,7 @@
             "Miyu" "Akari" "Rin" "Ayaka" "Sara"])
 
 
+
 (defn get-random-contact
   "Returns a contact"
   [contact-id]
@@ -95,10 +94,9 @@
 
 
 
-; fill the database with 150k contacts, using different dotimes to have different db Ts
-(dotimes [_ 100]
-  (dotimes [_ 1500]
-    @(d/transact conn [(get-random-contact (d/squuid))])))
+                                        ; fill the database with 150k contacts, using different dotimes to have different db Ts
+(dotimes [_ 150000]
+  @(d/transact conn [(get-random-contact (d/squuid))]))
 
 ;; count on the database
 (def db (d/db conn))
@@ -114,8 +112,6 @@
                                          :in $
                                          :where [?e :contact/customer-id ?customer-id]] db)))
 
-random-customer-id
-
 
 ;; get all contacts from that customer
 (count (d/q '[:find (pull ?c [:contact/customer-id+contact-name])
@@ -129,8 +125,6 @@ random-customer-id
        :where [?e :contact/customer-id ?c-id]]
      (d/db conn) random-customer-id)
 
-(d/basis-t db) ; current t for our DB, we need to encrypt the t on the answer
-
 
 (def db-t (d/as-of db (d/basis-t db)))
 
@@ -141,6 +135,7 @@ random-customer-id
 
 (:contact/customer-id+contact-name+contact-id (last first-page))
 
+; we kept the same db but we could get that same db using the t as parameter (def db-t (d/as-of db parameter-t))
 (take 100 (d/index-pull db-t {:index :avet
                               :selector '[:contact/name]
                               :start [:contact/customer-id+contact-name+contact-id (:contact/customer-id+contact-name+contact-id (last first-page))]}))
