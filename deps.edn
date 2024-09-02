@@ -4,7 +4,11 @@
         clj-http/clj-http {:mvn/version "3.12.3"}
         com.datomic/peer          {:mvn/version "1.0.7075"
                                    :exclusions [org.slf4j/slf4j-nop
-                                                org.slf4j/slf4j-log4j12]}}
+                                                org.slf4j/slf4j-log4j12]}
+        common-datomic/common-datomic {:mvn/version "11.27.0"}
+        common-schemata/common-schemata {:mvn/version "75.50.2"}
+        common-core/common-core {:mvn/version "16.63.1"}}
+ :mvn/repos {"nu-codeartifact" {:url "https://maven.cicd.nubank.world"}}
  :aliases {:run {:exec-fn datomic.load-generator/run}
            :dev
-  {:extra-deps {io.github.nubank/morse {:git/tag "v2023.04.30.01" :git/sha "d99b09c"}}}}}
+           {:extra-deps {io.github.nubank/morse {:git/tag "v2023.04.30.01" :git/sha "d99b09c"}}}}}
